@@ -178,27 +178,12 @@ async function renderAnnouncements() {
   }
 
   function _createMessage(announcement) {
-    // Message text
-    const summary = el("summary", announcement.title)
-    const details = el("details", announcement.body);
-    details.appendChild(summary);
-
-    // Read button for message removal (reading message)
-    const readButton = el("button");
-    readButton.className = "read-message-button";
-    readButton.type = "button";
-    readButton.onclick = () => _removeMessage(announcement);
-    const readButtonImg = el("img")
-    readButtonImg.alt = "Mark announcement as read."
-    readButtonImg.src = "res/icons/mail_closed_light.png"
-    readButton.appendChild(readButtonImg);
-
-    // Assemble message
-    const message = el("div");
-    message.className = "announcement-message";
-    message.appendChild(details);
-    message.appendChild(readButton);
-
+    // Uses message template to form message element.
+    const messageTemplate = document.getElementById("announcement-message-template");
+    const message = messageTemplate.content.cloneNode(true);
+    message.querySelector(".announcement-message-summary").textContent = announcement.title;
+    message.querySelector(".announcement-message-details-content").textContent = announcement.body;
+    message.querySelector(".announcement-message-read-button").onclick = () => _removeMessage(announcement);
     return message;
   }
   for (const a of state.announcements) {

@@ -27,29 +27,12 @@
       <div id="my-reservations"></div>
 
       <hr>
-      <!-- <h2>Announcements</h2> -->
+
       <div id="announcements">
-        <!--
-            Todo
-              1. Replicate rough structure of nicegui announcements into
-                   html + css + js
-              2. Use similar templating idea from Alex
-              3. wip
-          -->
         <h2 id="announcements-header">Announcements (# unread)</h2>
         <div>
-
           <div id="announcements-unread">
-            <!-- <div class="announcement-message"> -->
-            <!--   <details> -->
-            <!--     <summary>Message title</summary> -->
-            <!--     Message details -->
-            <!--   </details> -->
-            <!--   <button class="read-message-button" type="button" onclick="removeAnnouncementMessage(this.parentElement)"> -->
-            <!--     <img alt="Mark announcement as read." src="res/icons/mail_closed_light.png" /> -->
-            <!--     <!-- Mark announcement as read --> -->
-            <!--   </button> -->
-            <!-- </div> -->
+            <!-- populated by announcement messages -->
           </div>
 
           <h3 id="announcements-no-new-messages" hidden>No new announcements...</h3>
@@ -59,7 +42,24 @@
           Clear all messages
         </button>
 
+        <!-- Announcement message template for populating unread announcements -->
+        <template id="announcement-message-template">
+          <div class="announcement-message">
+            <!-- text and other information for announcement -->
+            <details class="announcement-message-details">
+              <summary class="announcement-message-summary">Message title</summary>
+              <div class="announcement-message-details-content">Message details</div>
+            </details>
+            <!-- mark as read button -->
+            <button class="announcement-message-read-button" type="button">
+              <img class="announcement-message-read-button-image" alt="Mark announcement as read."
+                src="res/icons/mail_closed_light.png" />
+              <!-- Mark announcement as read -->
+            </button>
+          </div>
+        </template>
       </div>
+
     </div>
   </div>
 
