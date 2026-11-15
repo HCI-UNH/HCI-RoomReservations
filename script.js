@@ -22,7 +22,7 @@ async function apiPost(path, body) {
     });
     if (!resp.ok) {
       let detail = "";
-      try { detail = (await resp.json()).detail; } catch (_) {}
+      try { detail = (await resp.json()).detail; } catch (_) { }
       showError(detail || "Request failed: " + resp.status);
       return false;
     }
@@ -150,15 +150,25 @@ async function renderMyReservations() {
 }
 
 async function renderAnnouncements() {
-  const container = document.getElementById("announcements");
+  // const container = document.getElementById("announcements");
+  const header = document.getElementById("announcements-header");
+  const unread = document.getElementById("announcements-unread");
+  const noNewMessages = document.getElementById("announcements-no-new-messages");
+
   const announcements = await apiGet("/announcements");
-  container.replaceChildren();
+  unread.replaceChildren();
 
   for (const a of announcements) {
-    container.appendChild(el("div", a.title));
-    container.appendChild(el("div", a.body));
-    container.appendChild(document.createElement("hr"));
+    // unread.appendChild(el("div", a.title));
+    // unread.appendChild(el("div", a.body));
+    // unread.appendChild(document.createElement("hr"));
+    unread.appendChild(el("div", a.title));
   }
+
+  let numUnread = unread.children.length;
+
+  header.textContent = "Announcements (" + numUnread + " unread)";
+  noNewMessages.hidden = numUnread > 0;
 }
 
 async function init() {
