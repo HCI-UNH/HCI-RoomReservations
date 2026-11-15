@@ -1,6 +1,9 @@
 const API_BASE = "http://localhost:8004";
 
-const state = { roomId: null };
+const state = {
+  roomId: null,
+  announcements: [],
+};
 
 async function apiGet(path, fallback = []) {
   try {
@@ -58,6 +61,11 @@ async function cancelReservation(reservationId) {
 function selectRoom(roomId) {
   state.roomId = roomId;
   renderContent();
+}
+
+async function updateState() {
+  // TODO: Put all state updates here...
+  state.announcements = await apiGet("/announcements");
 }
 
 async function renderSidebar() {
@@ -155,23 +163,61 @@ async function renderAnnouncements() {
   const unread = document.getElementById("announcements-unread");
   const noNewMessages = document.getElementById("announcements-no-new-messages");
 
-  const announcements = await apiGet("/announcements");
   unread.replaceChildren();
 
-  for (const a of announcements) {
-    // unread.appendChild(el("div", a.title));
-    // unread.appendChild(el("div", a.body));
-    // unread.appendChild(document.createElement("hr"));
-    unread.appendChild(el("div", a.title));
+  // Create messages from available announcements
+
+  function _removeMessage(announcement) {
+    for (const [index, a] of state.announcements.entries()) {
+      if (a.id === announcement.id) {
+        state.announcements.splice(index, 1);
+        break;
+      }
+    }
+    renderAnnouncements()
   }
 
-  let numUnread = unread.children.length;
+  function _createMessage(announcement) {
+    // Message text
+    const summary = el("summary", announcement.title)
+    const details = el("details", announcement.body);
+    details.appendChild(summary);
 
-  header.textContent = "Announcements (" + numUnread + " unread)";
-  noNewMessages.hidden = numUnread > 0;
+    // Read button for message removal (reading message)
+    const readButton = el("button");
+    readButton.className = "read-message-button";
+    readButton.type = "button";
+    readButton.onclick = () => _removeMessage(announcement);
+    const readButtonImg = el("img")
+    readButtonImg.alt = "Mark announcement as read."
+    readButtonImg.src = "res/icons/mail_closed_light.png"
+    readButton.appendChild(readButtonImg);
+
+    // Assemble message
+    const message = el("div");
+    message.className = "announcement-message";
+    message.appendChild(details);
+    message.appendChild(readButton);
+
+    return message;
+  }
+  for (const a of state.announcements) {
+    unread.appendChild(_createMessage(a));
+    // unread.appendChild(document.createElement("hr"));
+  }
+
+  const numAnnouncements = state.announcements.length;
+  header.textContent = "Announcements (" + numAnnouncements + " unread)";
+  noNewMessages.hidden = numAnnouncements > 0;
+}
+
+function clearAnnouncements() {
+  state.announcements.length = 0;
+  renderAnnouncements();
 }
 
 async function init() {
+  await updateState();
   await renderSidebar();
   await renderContent();
 }
