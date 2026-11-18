@@ -167,7 +167,7 @@ async function renderAnnouncements() {
 
   // Create messages from available announcements
 
-  function _removeMessage(announcement) {
+  function _removeAnnouncement(announcement) {
     for (const [index, a] of state.announcements.entries()) {
       if (a.id === announcement.id) {
         state.announcements.splice(index, 1);
@@ -202,7 +202,7 @@ async function renderAnnouncements() {
     const messageConfirmationDialog = message.querySelector(".announcement-message-clear-confirmation-dialog");
     message.querySelector(".announcement-message-clear-confirmation-dialog-yes-button").onclick = () => {
       messageConfirmationDialog.close();
-      _removeMessage(announcement);
+      _removeAnnouncement(announcement);
     };
     message.querySelector(".announcement-message-clear-confirmation-dialog-no-button").onclick = () => {
       messageConfirmationDialog.close();
@@ -217,7 +217,6 @@ async function renderAnnouncements() {
   }
   for (const a of state.announcements) {
     unread.appendChild(_createMessage(a));
-    // unread.appendChild(document.createElement("hr"));
   }
 
   const numAnnouncements = state.announcements.length;
