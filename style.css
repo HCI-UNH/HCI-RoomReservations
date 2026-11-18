@@ -1,3 +1,13 @@
+
+:root {
+  --blue: #003591;
+  --white: #FFFFFF;
+  --gray: #A3A9AC;
+
+  --blue-dark: #00266B;
+  --blue-tint: #E6EBF4;
+}
+
 body {
   font-family: sans-serif;
   margin: 16px;
@@ -33,10 +43,11 @@ h2 { font-size: 18px; }
   margin: 4px 0;
 }
 
-hr { 
-  margin: 8px 0; 
+hr {
+  margin: 8px 0;
 }
 
-#error { 
-  color: #b00020; 
+#error {
+  color: #b00020;
 }
+
