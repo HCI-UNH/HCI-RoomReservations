@@ -158,7 +158,7 @@ async function renderMyReservations() {
 }
 
 async function renderAnnouncements() {
-  // const container = document.getElementById("announcements");
+  const announcementsContainer = document.getElementById("announcements");
   const header = document.getElementById("announcements-header");
   const unread = document.getElementById("announcements-unread");
   const noNewMessages = document.getElementById("announcements-no-new-messages");
@@ -177,13 +177,42 @@ async function renderAnnouncements() {
     renderAnnouncements()
   }
 
+  function _removeAllAnnouncements() {
+    state.announcements.length = 0;
+    renderAnnouncements();
+  }
+
   function _createMessage(announcement) {
     // Uses message template to form message element.
     const messageTemplate = document.getElementById("announcement-message-template");
     const message = messageTemplate.content.cloneNode(true);
-    message.querySelector(".announcement-message-summary").textContent = announcement.title;
-    message.querySelector(".announcement-message-details-content").textContent = announcement.body;
-    message.querySelector(".announcement-message-read-button").onclick = () => _removeMessage(announcement);
+
+    message.querySelector(".announcement-message-title").textContent = announcement.title;
+    const messagePostedTime = message.querySelector(".announcement-message-posted-time");
+    messagePostedTime.datetime = announcement.posted;
+    messagePostedTime.textContent = new Date(announcement.posted);
+    const messageBody = message.querySelector(".announcement-message-body");
+    messageBody.textContent = announcement.body;
+    // Open/Close announcement message
+    message.querySelector(".announcement-message").onclick = () => {
+      messageBody.hidden = !messageBody.hidden;
+    };
+
+    // Clear announcement
+    const messageConfirmationDialog = message.querySelector(".announcement-message-clear-confirmation-dialog");
+    message.querySelector(".announcement-message-clear-confirmation-dialog-yes-button").onclick = () => {
+      messageConfirmationDialog.close();
+      _removeMessage(announcement);
+    };
+    message.querySelector(".announcement-message-clear-confirmation-dialog-no-button").onclick = () => {
+      messageConfirmationDialog.close();
+    };
+
+    message.querySelector(".announcement-message-clear-button").onclick = (event) => {
+      messageConfirmationDialog.showModal();
+      event.stopPropagation(); // Don't toggle message body while trying to clear the message.
+    };
+
     return message;
   }
   for (const a of state.announcements) {
@@ -194,11 +223,21 @@ async function renderAnnouncements() {
   const numAnnouncements = state.announcements.length;
   header.textContent = "Announcements (" + numAnnouncements + " unread)";
   noNewMessages.hidden = numAnnouncements > 0;
-}
 
-function clearAnnouncements() {
-  state.announcements.length = 0;
-  renderAnnouncements();
+  // Clear all announcements
+  const clearAllAnnouncementsContainer = document.getElementById("announcement-clear-all");
+  const clearAllAnnouncementsButton = document.getElementById("announcement-clear-all-messages-button");
+  const clearAllAnnouncementsConfirmationDialog = clearAllAnnouncementsContainer.querySelector(".announcement-message-clear-confirmation-dialog");
+  clearAllAnnouncementsButton.onclick = () => {
+    clearAllAnnouncementsConfirmationDialog.showModal();
+  };
+  clearAllAnnouncementsConfirmationDialog.querySelector(".announcement-message-clear-confirmation-dialog-yes-button").onclick = () => {
+    clearAllAnnouncementsConfirmationDialog.close();
+    _removeAllAnnouncements();
+  };
+  clearAllAnnouncementsConfirmationDialog.querySelector(".announcement-message-clear-confirmation-dialog-no-button").onclick = () => {
+    clearAllAnnouncementsConfirmationDialog.close();
+  };
 }
 
 async function init() {

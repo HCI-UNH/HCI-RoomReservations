@@ -32,32 +32,49 @@
         <h2 id="announcements-header">Announcements (# unread)</h2>
         <div>
           <div id="announcements-unread">
-            <!-- populated by announcement messages -->
+            <!-- populated by announcement messages (template) -->
           </div>
 
           <h3 id="announcements-no-new-messages" hidden>No new announcements...</h3>
-
         </div>
-        <button id="read-all-messages" type="button" onclick="clearAnnouncements()">
-          Clear all messages
-        </button>
+
+        <!-- clearing all announcements button and confirmation dialog -->
+        <div id="announcement-clear-all">
+          <button id="announcement-clear-all-messages-button" type="button">Clear All Announcements</button>
+          <dialog class="announcement-message-clear-confirmation-dialog">
+            <p>Are you sure you want to remove all announcements?</p>
+            <div class="announcement-message-clear-confirmation-dialog-buttons">
+              <button class="announcement-message-clear-confirmation-dialog-yes-button" type="button">Yes</button>
+              <button class="announcement-message-clear-confirmation-dialog-no-button" type="button">No</button>
+            </div>
+          </dialog>
+        </div>
+
 
         <!-- Announcement message template for populating unread announcements -->
         <template id="announcement-message-template">
           <div class="announcement-message">
+            <img class="announcement-message-mail-image" src="res/icons/mail_closed_light.png" />
             <!-- text and other information for announcement -->
-            <details class="announcement-message-details">
-              <summary class="announcement-message-summary">Message title</summary>
-              <div class="announcement-message-details-content">Message details</div>
-            </details>
-            <!-- mark as read button -->
-            <button class="announcement-message-read-button" type="button">
-              <img class="announcement-message-read-button-image" alt="Mark announcement as read."
-                src="res/icons/mail_closed_light.png" />
-              <!-- Mark announcement as read -->
-            </button>
+            <article class="announcement-message-content">
+              <h2 class="announcement-message-title">Announcement Title</h2>
+              <p>Posted: <time class="announcement-message-posted-time"></time></p>
+              <p class="announcement-message-body" hidden>Announcement body.</p>
+            </article>
+            <!-- clearing announcement message -->
+            <button class="announcement-message-clear-button" type="button">❌</button>
           </div>
+          <!-- clearing announcement confirmation -->
+          <dialog class="announcement-message-clear-confirmation-dialog">
+            <p>Are you sure you want to remove this announcement?</p>
+            <div class="announcement-message-clear-confirmation-dialog-buttons">
+              <button class="announcement-message-clear-confirmation-dialog-yes-button" type="button">Yes</button>
+              <button class="announcement-message-clear-confirmation-dialog-no-button" type="button">No</button>
+            </div>
+          </dialog>
         </template>
+
+
       </div>
 
     </div>
