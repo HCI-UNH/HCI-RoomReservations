@@ -158,8 +158,7 @@ async function renderMyReservations() {
 }
 
 async function renderAnnouncements() {
-  const announcementsContainer = document.getElementById("announcements");
-  const header = document.getElementById("announcements-header");
+  const headerText = document.getElementById("announcements-header-text");
   const unread = document.getElementById("announcements-unread");
   const noNewMessages = document.getElementById("announcements-no-new-messages");
 
@@ -223,7 +222,7 @@ async function renderAnnouncements() {
   }
 
   const numAnnouncements = state.announcements.length;
-  header.textContent = "Announcements (" + numAnnouncements + " unread)";
+  headerText.textContent = "Announcements (" + numAnnouncements + " unread)";
   noNewMessages.hidden = numAnnouncements > 0;
 
   // Clear all announcements

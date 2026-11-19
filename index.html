@@ -29,18 +29,14 @@
       <hr>
 
       <div id="announcements">
-        <h2 id="announcements-header">Announcements (# unread)</h2>
-        <div>
-          <div id="announcements-unread">
-            <!-- populated by announcement messages (template) -->
-          </div>
-
-          <h3 id="announcements-no-new-messages" hidden>No new announcements...</h3>
+        <div id="announcements-header">
+          <h2 id="announcements-header-text">Announcements (# unread)</h2>
+          <!-- clearing all announcements button and confirmation dialog -->
+          <button id="announcement-clear-all-messages-button" type="button">Clear All Announcements</button>
         </div>
 
-        <!-- clearing all announcements button and confirmation dialog -->
-        <div id="announcement-clear-all">
-          <button id="announcement-clear-all-messages-button" type="button">Clear All Announcements</button>
+        <!-- clear all announcements dialog -->
+        <div id="announcement-clear-all"> <!-- Used to recycle confirmation dialog class -->
           <dialog class="announcement-message-clear-confirmation-dialog">
             <p>Are you sure you want to remove all announcements?</p>
             <div class="announcement-message-clear-confirmation-dialog-buttons">
@@ -50,6 +46,11 @@
           </dialog>
         </div>
 
+        <!-- all unread announcement messages -->
+        <div id="announcements-unread">
+          <!-- populated by announcement messages (template) -->
+        </div>
+        <h3 id="announcements-no-new-messages" hidden>No new announcements...</h3>
 
         <!-- Announcement message template for populating unread announcements -->
         <template id="announcement-message-template">
