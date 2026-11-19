@@ -175,7 +175,11 @@ async function init() {
   await renderSidebar();
   await renderContent();
 
-  initializeCalendar();
+  const reservations = await apiGet("/all-reservations");
+  console.log("Reservations:", reservations);
+  console.log("Is array:", Array.isArray(reservations));
+
+  initializeCalendar(reservations);
 }
 
 

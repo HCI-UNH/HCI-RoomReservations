@@ -60,7 +60,6 @@ export function renderCalendar() {
 
     container.innerHTML = '';
 
-    // Generate calendar weeks
     calendar.forEach(week => {
 
         week.forEach(day => {
@@ -79,7 +78,7 @@ export function renderCalendar() {
                 dayElement.appendChild(dayNumber);
 
                 // Add events for this date
-                const dateString = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                const dateString = new Date(year, month, day).toLocaleDateString('en-CA');
 
                 const dayEvents = events.filter(event => event.date === dateString);
 
@@ -87,7 +86,7 @@ export function renderCalendar() {
 
                     const eventElement = document.createElement('div');
                     eventElement.classList.add('calendar-event');
-                    eventElement.textContent = event.title;
+                    eventElement.textContent = `${event.building}) - ${event.slot} -- reserved by :${event.reserved_by}`;
 
                     dayElement.appendChild(eventElement);
                 });
@@ -123,7 +122,7 @@ export function addEvent(event) {
 
 
 // Initialize calendar
-export function initializeCalendar() {
+export function initializeCalendar(reservations) {
 
     console.log("Calling initializeCalendar...");
 
@@ -135,17 +134,6 @@ export function initializeCalendar() {
         changeMonth(1);
     });
 
-    // Example events
-    events = [
-        {
-            title: 'Room Reservation',
-            date: '2026-11-18'
-        },
-        {
-            title: 'Meeting',
-            date: '2026-11-19'
-        }
-    ];
-
+    events = reservations
     renderCalendar();
 }
