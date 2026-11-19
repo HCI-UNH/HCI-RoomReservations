@@ -57,11 +57,12 @@
             <!-- text and other information for announcement -->
             <article class="announcement-message-content">
               <h2 class="announcement-message-title">Announcement Title</h2>
-              <p>Posted: <time class="announcement-message-posted-time"></time></p>
+              <p class="announcement-message-posted">Posted: <time
+                  class="announcement-message-posted-time">*time*</time></p>
               <p class="announcement-message-body" hidden>Announcement body.</p>
             </article>
             <!-- clearing announcement message -->
-            <button class="announcement-message-clear-button" type="button">❌</button>
+            <button class="announcement-message-clear-button" type="button">❌</button> <!-- TODO: this is jank... -->
           </div>
           <!-- clearing announcement confirmation -->
           <dialog class="announcement-message-clear-confirmation-dialog">

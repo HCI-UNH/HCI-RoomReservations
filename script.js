@@ -215,7 +215,10 @@ async function renderAnnouncements() {
 
     return message;
   }
-  for (const a of state.announcements) {
+
+  // Display announcements in descending order (most recent first)
+  const announcementsDescendingDate = state.announcements.sort((a, b) => new Date(b.posted) - new Date(a.posted));
+  for (const a of announcementsDescendingDate) {
     unread.appendChild(_createMessage(a));
   }
 
