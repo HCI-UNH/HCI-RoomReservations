@@ -2,6 +2,13 @@ const API_BASE = "http://localhost:8004";
 
 const state = { roomId: null };
 
+import {
+    initializeCalendar,
+    renderCalendar,
+    changeMonth,
+    addEvent
+} from './calendar.js';
+
 async function apiGet(path, fallback = []) {
   try {
     const resp = await fetch(API_BASE + path);
@@ -162,8 +169,16 @@ async function renderAnnouncements() {
 }
 
 async function init() {
+
+  console.log("Initializing application...");
+
   await renderSidebar();
   await renderContent();
+
+  initializeCalendar();
 }
+
+
+// document.addEventListener('DOMContentLoaded', init);
 
 init();
