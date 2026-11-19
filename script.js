@@ -22,7 +22,7 @@ async function apiPost(path, body) {
     });
     if (!resp.ok) {
       let detail = "";
-      try { detail = (await resp.json()).detail; } catch (_) {}
+      try { detail = (await resp.json()).detail; } catch (_) { }
       showError(detail || "Request failed: " + resp.status);
       return false;
     }
