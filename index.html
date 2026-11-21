@@ -1,55 +1,107 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <title>Mock Room Reservations</title>
-    <link rel="stylesheet" href="style.css">
-  </head>
-  <body>
-    <div id="error"></div>
 
-    <div class="layout">
-      <div class="sidebar">
-        <h2>Rooms</h2>
-        <div id="room-list"></div>
-      </div>
+<head>
+  <meta charset="UTF-8">
+  <title>Mock Room Reservations</title>
+  <link rel="stylesheet" href="style.css">
+</head>
 
-      <div class="main">
-        <div id="room-header"></div>
+<body>
+  <div id="error"></div>
 
-        <div class="calendar">
-          <div class="calendar-controls">
-              <button id="prev-month">Previous</button>
-              <h2 id="calendar-title"></h2>
-              <button id="next-month">Next</button>
-          </div>
-
-          <div class="calendar-weekdays">
-              <div>Sun</div>
-              <div>Mon</div>
-              <div>Tue</div>
-              <div>Wed</div>
-              <div>Thu</div>
-              <div>Fri</div>
-              <div>Sat</div>
-          </div>
-
-          <div id="calendar-body"></div>
-        </div> 
-
-        <h2>Today's availability</h2>
-        <div id="slots"></div>
-
-        <hr>
-        <h2>My Reservations</h2>
-        <div id="my-reservations"></div>
-
-        <hr>
-        <h2>Announcements</h2>
-        <div id="announcements"></div>
-      </div>
+  <div class="layout">
+    <div class="sidebar">
+      <h2>Rooms</h2>
+      <div id="room-list"></div>
     </div>
 
-    <script type="module" src="script.js"></script>
-  </body>
+    <div class="main">
+      <div id="room-header"></div>
+
+      <div class="calendar">
+        <div class="calendar-controls">
+          <button id="prev-month">Previous</button>
+          <h2 id="calendar-title"></h2>
+          <button id="next-month">Next</button>
+        </div>
+
+        <div class="calendar-weekdays">
+          <div>Sun</div>
+          <div>Mon</div>
+          <div>Tue</div>
+          <div>Wed</div>
+          <div>Thu</div>
+          <div>Fri</div>
+          <div>Sat</div>
+        </div>
+
+        <div id="calendar-body"></div>
+      </div>
+
+      <h2>Today's availability</h2>
+      <div id="slots"></div>
+
+      <hr>
+      <h2>My Reservations</h2>
+      <div id="my-reservations"></div>
+
+      <hr>
+
+      <div id="announcements">
+        <div id="announcements-header">
+          <h2 id="announcements-header-text">Announcements (# unread)</h2>
+          <!-- clearing all announcements button and confirmation dialog -->
+          <button id="announcement-clear-all-messages-button" type="button">Clear All Announcements</button>
+        </div>
+
+        <!-- clear all announcements dialog -->
+        <div id="announcement-clear-all"> <!-- Used to recycle confirmation dialog class -->
+          <dialog class="announcement-message-clear-confirmation-dialog">
+            <p>Are you sure you want to remove all announcements?</p>
+            <div class="announcement-message-clear-confirmation-dialog-buttons">
+              <button class="announcement-message-clear-confirmation-dialog-yes-button" type="button">Yes</button>
+              <button class="announcement-message-clear-confirmation-dialog-no-button" type="button">No</button>
+            </div>
+          </dialog>
+        </div>
+
+        <!-- all unread announcement messages -->
+        <div id="announcements-unread">
+          <!-- populated by announcement messages (template) -->
+        </div>
+        <h3 id="announcements-no-new-messages" hidden>No new announcements...</h3>
+
+        <!-- Announcement message template for populating unread announcements -->
+        <template id="announcement-message-template">
+          <div class="announcement-message">
+            <!-- text and other information for announcement -->
+            <article class="announcement-message-content">
+              <h2 class="announcement-message-title">Announcement Title</h2>
+              <p class="announcement-message-posted">Posted: <time
+                  class="announcement-message-posted-time">*time*</time></p>
+              <p class="announcement-message-body" hidden>Announcement body.</p>
+            </article>
+            <!-- clearing announcement message -->
+            <button class="announcement-message-clear-button" type="button">❌</button> <!-- TODO: this is jank... -->
+          </div>
+          <!-- clearing announcement confirmation -->
+          <dialog class="announcement-message-clear-confirmation-dialog">
+            <p>Are you sure you want to remove this announcement?</p>
+            <div class="announcement-message-clear-confirmation-dialog-buttons">
+              <button class="announcement-message-clear-confirmation-dialog-yes-button" type="button">Yes</button>
+              <button class="announcement-message-clear-confirmation-dialog-no-button" type="button">No</button>
+            </div>
+          </dialog>
+        </template>
+
+
+      </div>
+
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+
 </html>
