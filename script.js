@@ -3,6 +3,7 @@ const API_BASE = "http://localhost:8004";
 const state = {
   roomId: null,
   announcements: [],
+  myReservations: [],
 };
 
 let currentDate = new Date();
@@ -61,14 +62,15 @@ async function cancelReservation(reservationId) {
   }
 }
 
+async function cancelAllReservations() {
+  if (await apiPost("/reservations/cancel-all", {})) {
+    renderContent();
+  }
+}
+
 function selectRoom(roomId) {
   state.roomId = roomId;
   renderContent();
-}
-
-async function updateState() {
-  // TODO: Put all state updates here...
-  state.announcements = await apiGet("/announcements");
 }
 
 async function renderSidebar() {
@@ -263,26 +265,83 @@ async function renderSlots() {
 }
 
 async function renderMyReservations() {
-  const container = document.getElementById("my-reservations");
-  const reservations = await apiGet("/my-reservations");
-  container.replaceChildren();
+  // Reservations can change outside of rendering (booking), so a fetch is necessary here...
+  state.myReservations = await apiGet("/my-reservations");
 
-  if (!reservations.length) {
-    container.appendChild(el("div", "You don't have any reservations yet."));
-    return;
+  const headerText = document.getElementById("reservations-header-text");
+  const list = document.getElementById("reservations-list");
+  const noReservations = document.getElementById("reservations-none");
+
+  list.replaceChildren();
+
+  // Create reservation cards from user's reservations
+  function _slotStartHour(slot) {
+    return parseInt(slot.split(":")[0], 10);
   }
 
-  for (const r of reservations) {
-    const row = el("div");
-    row.className = "row";
-    row.appendChild(el("span", `${r.room_name} (${r.building}) - ${r.date} ${r.slot}`));
+  function _createReservation(reservation) {
+    const reservationTemplate = document.getElementById("reservation-template");
+    const card = reservationTemplate.content.cloneNode(true);
 
-    const btn = el("button", "Cancel");
-    btn.onclick = () => cancelReservation(r.id);
-    row.appendChild(btn);
+    card.querySelector(".reservation-room").textContent = reservation.room_name;
+    card.querySelector(".reservation-building").textContent = reservation.building;
+    const reservationDate = card.querySelector(".reservation-date");
+    reservationDate.dateTime = reservation.date;
+    // Parse as local time; a bare "YYYY-MM-DD" is parsed as UTC and can display as the previous day.
+    reservationDate.textContent = new Date(reservation.date + "T00:00:00").toLocaleDateString("en-US", {
+      weekday: "long",
+      month: "long",
+      day: "numeric",
+      year: "numeric",
+    });
+    card.querySelector(".reservation-slot").textContent = reservation.slot;
 
-    container.appendChild(row);
+    // Cancel reservation
+    const cancelConfirmationDialog = card.querySelector(".reservation-cancel-confirmation-dialog");
+    card.querySelector(".reservation-cancel-confirmation-dialog-yes-button").onclick = () => {
+      cancelConfirmationDialog.close();
+      cancelReservation(reservation.id);
+    };
+    card.querySelector(".reservation-cancel-confirmation-dialog-no-button").onclick = () => {
+      cancelConfirmationDialog.close();
+    };
+
+    card.querySelector(".reservation-cancel-button").onclick = () => {
+      cancelConfirmationDialog.showModal();
+    };
+
+    return card;
   }
+
+  // Display reservations in ascending order (soonest first)
+  // Sort by date, then by time, then by room name
+  const reservationsAscending = state.myReservations.sort((a, b) =>
+    a.date.localeCompare(b.date) ||
+    _slotStartHour(a.slot) - _slotStartHour(b.slot) ||
+    a.room_name.localeCompare(b.room_name));
+  for (const r of reservationsAscending) {
+    list.appendChild(_createReservation(r));
+  }
+
+  const numReservations = state.myReservations.length;
+  headerText.textContent = "My Reservations (" + numReservations + ")";
+  noReservations.hidden = numReservations > 0;
+
+  // Cancel all reservations
+  const cancelAllReservationsContainer = document.getElementById("reservation-cancel-all");
+  const cancelAllReservationsButton = document.getElementById("reservation-cancel-all-button");
+  const cancelAllReservationsConfirmationDialog = cancelAllReservationsContainer.querySelector(".reservation-cancel-confirmation-dialog");
+  cancelAllReservationsButton.disabled = numReservations === 0;
+  cancelAllReservationsButton.onclick = () => {
+    cancelAllReservationsConfirmationDialog.showModal();
+  };
+  cancelAllReservationsConfirmationDialog.querySelector(".reservation-cancel-confirmation-dialog-yes-button").onclick = () => {
+    cancelAllReservationsConfirmationDialog.close();
+    cancelAllReservations();
+  };
+  cancelAllReservationsConfirmationDialog.querySelector(".reservation-cancel-confirmation-dialog-no-button").onclick = () => {
+    cancelAllReservationsConfirmationDialog.close();
+  };
 }
 
 async function renderAnnouncements() {
@@ -292,7 +351,7 @@ async function renderAnnouncements() {
 
   unread.replaceChildren();
 
-  // Create messages from available announcements
+  // ~~~Create messages from available announcements~~~ //
 
   function _removeAnnouncement(announcement) {
     for (const [index, a] of state.announcements.entries()) {
@@ -370,17 +429,21 @@ async function renderAnnouncements() {
 }
 
 async function init() {
-  await updateState();
+  // TODO: Announcements are only fetched once on init. If we wanted persistent
+  //       announcements, then we would need user accounts or something similar
+  //       on the api-side (similarly to reservations).
+  state.announcements = await apiGet("/announcements");
+
+  const reservations = await apiGet("/all-reservations");
+  // console.log("Reservations:", reservations);
+  // console.log("Is array:", Array.isArray(reservations));
+
+  // Initialize actual page
   await renderSidebar();
   await renderContent();
 
-  const reservations = await apiGet("/all-reservations");
-  console.log("Reservations:", reservations);
-  console.log("Is array:", Array.isArray(reservations));
-
   initializeCalendar(reservations);
 }
-
 
 // document.addEventListener('DOMContentLoaded', init);
 
