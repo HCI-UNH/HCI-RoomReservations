@@ -43,11 +43,55 @@
       <div id="slots"></div>
 
       <hr>
-      <h2>My Reservations</h2>
-      <div id="my-reservations"></div>
+      <div id="reservations">
+        <div id="reservations-header">
+          <h2 id="reservations-header-text">My Reservations (#)</h2>
+          <!-- cancelling all reservations button and confirmation dialog -->
+          <button id="reservation-cancel-all-button" type="button">Cancel All Reservations</button>
+        </div>
+
+        <!-- cancel all reservations dialog -->
+        <div id="reservation-cancel-all"> <!-- Used to recycle confirmation dialog class -->
+          <dialog class="reservation-cancel-confirmation-dialog">
+            <p>Are you sure you want to cancel all of your reservations?</p>
+            <div class="reservation-cancel-confirmation-dialog-buttons">
+              <button class="reservation-cancel-confirmation-dialog-yes-button" type="button">Yes</button>
+              <button class="reservation-cancel-confirmation-dialog-no-button" type="button">No</button>
+            </div>
+          </dialog>
+        </div>
+
+        <!-- all of the user's reservations -->
+        <div id="reservations-list">
+          <!-- populated by reservation cards (template) -->
+        </div>
+        <h3 id="reservations-none" hidden>You don't have any reservations yet.</h3>
+
+        <!-- Reservation template for populating current user reservations -->
+        <template id="reservation-template">
+          <div class="reservation">
+            <!-- room and time information for reservation -->
+            <article class="reservation-content">
+              <h2 class="reservation-room">Room Name</h2>
+              <p class="reservation-building">Building</p>
+              <p class="reservation-when"><time class="reservation-date">*date*</time> · <span
+                  class="reservation-slot">*slot*</span></p>
+            </article>
+            <!-- cancelling reservation -->
+            <button class="reservation-cancel-button" type="button">Cancel</button>
+          </div>
+          <!-- cancelling reservation confirmation -->
+          <dialog class="reservation-cancel-confirmation-dialog">
+            <p>Are you sure you want to cancel this reservation?</p>
+            <div class="reservation-cancel-confirmation-dialog-buttons">
+              <button class="reservation-cancel-confirmation-dialog-yes-button" type="button">Yes</button>
+              <button class="reservation-cancel-confirmation-dialog-no-button" type="button">No</button>
+            </div>
+          </dialog>
+        </template>
+      </div>
 
       <hr>
-
       <div id="announcements">
         <div id="announcements-header">
           <h2 id="announcements-header-text">Announcements (# unread)</h2>
@@ -94,8 +138,6 @@
             </div>
           </dialog>
         </template>
-
-
       </div>
 
     </div>
