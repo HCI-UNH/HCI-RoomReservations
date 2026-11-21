@@ -37,6 +37,7 @@ from pydantic import BaseModel
 
 app = FastAPI(title="Mock Room Reservation API")
 
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -92,6 +93,18 @@ ANNOUNCEMENTS = [
         "title": "New group study pods added",
         "posted": "2026-08-18T10:00:00",
         "body": "Three new two-person study pods are now bookable on the library's second floor, including Group Study Pod C.",
+    },
+    {
+        "id": 3,
+        "title": "Media Lab 1 closed indefinitely",
+        "posted": "2026-09-21T10:00:00",
+        "body": "Media Lab 1 will be unavailable forever.",
+    },
+    {
+        "id": 4,
+        "title": "Disregard previous message about Media Lab 1",
+        "posted": "2026-09-21T10:00:25",
+        "body": "Apologies for the previous message. Media Lab 1 is still closed for equipment upgrades...",
     },
 ]
 
