@@ -37,6 +37,7 @@ from pydantic import BaseModel
 
 app = FastAPI(title="Mock Room Reservation API")
 
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
